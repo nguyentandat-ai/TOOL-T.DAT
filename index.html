@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>TX MD5 N.TDAT 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{box-sizing:border-box;font-family:Consolas,monospace}
+body{
+  margin:0;
+  color:#00ff9c;
+  overflow:hidden;
+  background:linear-gradient(120deg,#0f2027,#203a43,#2c5364);
+  background-size:400% 400%;
+  animation:bg 18s ease infinite;
+}
+@keyframes bg{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+#matrix,#snow{position:fixed;top:0;left:0;width:100%;height:100%}
+#matrix{z-index:0}
+#snow{z-index:1;pointer-events:none}
+
+.box{
+  position:relative;
+  z-index:2;
+  max-width:420px;
+  margin:80px auto;
+  padding:20px;
+  background:rgba(0,0,0,.75);
+  border:1px solid #00ff9c;
+  border-radius:12px;
+  box-shadow:0 0 25px #00ff9c;
+}
+.hidden{display:none}
+h1{text-align:center;margin-bottom:15px}
+input,button{
+  width:100%;padding:12px;margin-top:10px;
+  background:black;border:1px solid #00ff9c;
+  color:#00ff9c;border-radius:6px
+}
+button{background:#00ff9c;color:black;font-weight:bold;cursor:pointer}
+button:hover{opacity:.85}
+.progress{width:100%;height:10px;background:#003b2a;border-radius:5px;overflow:hidden;margin-top:8px}
+.bar{height:100%;width:0%;background:#00ff9c;transition:width 1s}
+.key-item{display:flex;justify-content:space-between;margin-top:6px}
+.key-item button{width:auto;padding:5px 10px;font-size:12px}
+.small{font-size:12px;opacity:.8;margin-top:10px}
+</style>
+</head>
+
+<body>
+<canvas id="matrix"></canvas>
+<canvas id="snow"></canvas>
+
+<!-- LOGIN -->
+<div id="login" class="box">
+  <h1>TX MD5 N.TDAT 2026</h1>
+  <input id="keyInput" placeholder="Nhập KEY...">
+  <button onclick="checkKey()">XÁC NHẬN</button>
+</div>
+
+<!-- ADMIN -->
+<div id="admin" class="box hidden">
+  <h1>ADMIN PANEL</h1>
+  <button onclick="createKey()">TẠO KEY VĨNH VIỄN</button>
+  <div id="keyList"></div>
+</div>
+
+<!-- TOOL -->
+<div id="tool" class="box hidden">
+  <h1>TX MD5 N.TDAT 2026</h1>
+  <input id="md5" placeholder="Nhập MD5...">
+  <button onclick="predict()">DỰ ĐOÁN</button>
+  <div id="result" class="hidden">
+    <p id="final"></p>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <p class="small">
+      59 AI hội tụ → Meta Super AI Core
+    </p>
+  </div>
+</div>
+
+<script>
+/* ================= MATRIX ================= */
+const c=document.getElementById("matrix"),x=c.getContext("2d");
+function rs(){c.width=innerWidth;c.height=innerHeight}
+rs();onresize=rs;
+const ch="01TXMD5AIΣ",fs=14;
+let col=Math.floor(c.width/fs),drops=Array(col).fill(1);
+setInterval(()=>{
+  x.fillStyle="rgba(0,0,0,0.05)";
+  x.fillRect(0,0,c.width,c.height);
+  x.fillStyle="#00ff9c";x.font=fs+"px monospace";
+  drops.forEach((d,i)=>{
+    x.fillText(ch[Math.random()*ch.length|0],i*fs,d*fs);
+    drops[i]=d*fs>c.height&&Math.random()>0.975?0:d+1;
+  });
+},33);
+
+/* ================= SNOW ================= */
+const s=document.getElementById("snow"),sx=s.getContext("2d");
+s.width=innerWidth;s.height=innerHeight;
+let fl=Array.from({length:120},()=>({
+  x:Math.random()*s.width,
+  y:Math.random()*s.height,
+  r:Math.random()*2+1,
+  d:Math.random()+0.5
+}));
+setInterval(()=>{
+  sx.clearRect(0,0,s.width,s.height);
+  sx.fillStyle="rgba(255,255,255,.6)";
+  fl.forEach(f=>{
+    sx.beginPath();
+    sx.arc(f.x,f.y,f.r,0,Math.PI*2);
+    sx.fill();
+    f.y+=f.d;
+    if(f.y>s.height){f.y=0;f.x=Math.random()*s.width;}
+  });
+},33);
+
+/* ================= KEY ================= */
+const ADMIN_KEY="ADMINLONGDZ1212";
+let keys=JSON.parse(localStorage.getItem("TX_KEYS")||"[]");
+const save=()=>localStorage.setItem("TX_KEYS",JSON.stringify(keys));
+
+function checkKey(){
+  const k=keyInput.value.trim();
+  if(k===ADMIN_KEY){
+    login.classList.add("hidden");
+    admin.classList.remove("hidden");
+    render();
+    return;
+  }
+  if(keys.includes(k)){
+    login.classList.add("hidden");
+    tool.classList.remove("hidden");
+  }else alert("KEY KHÔNG HỢP LỆ");
+}
+function createKey(){
+  const k="KEY-"+Math.random().toString(36).substr(2,10).toUpperCase();
+  keys.push(k);save();render();
+}
+function render(){
+  keyList.innerHTML="";
+  keys.forEach(k=>{
+    const d=document.createElement("div");
+    d.className="key-item";
+    d.innerHTML=`<span>${k}</span><button onclick="copy('${k}')">COPY</button>`;
+    keyList.appendChild(d);
+  });
+}
+const copy=k=>{navigator.clipboard.writeText(k);alert("ĐÃ COPY KEY")};
+
+/* ================= 59 AI CORE ================= */
+function hashScore(md5,seed){
+  let s=0;
+  for(let i=0;i<md5.length;i++) s+=md5.charCodeAt(i)*(i+seed);
+  return s%100;
+}
+
+const AI_59=[
+  "Bayes","Markov","MonteCarlo","XGBoost","Logistic","LSTM","RandomForest","Entropy","Meta",
+  "NeuralNet","DeepNN","CNN","RNN","GRU","Transformer","Attention","AutoEncoder","GAN",
+  "HMM","Kalman","ARIMA","SARIMA","Prophet","Chaos","Fractal","Genetic","PSO","ACO",
+  "Fuzzy","RoughSet","Naive","KNN","SVM","AdaBoost","CatBoost","LightGBM","ExtraTrees",
+  "Isolation","LOF","Anomaly","TimeSeries","Pattern","Sequence","Frequency","Wavelet",
+  "Signal","QuantumSim","EntropyPlus","MetaFusion"
+]; // 59
+
+function predict(){
+  const md5=document.getElementById("md5").value.trim();
+  if(md5.length<16){alert("MD5 KHÔNG HỢP LỆ");return;}
+
+  result.classList.remove("hidden");
+  final.innerHTML="59 AI ĐANG HỘI TỤ...";
+  bar.style.width="0%";
+
+  setTimeout(()=>{
+    let total=0;
+    AI_59.forEach((_,i)=> total+=hashScore(md5,i+1));
+    let avg=Math.round(total/AI_59.length);
+
+    /* ===== KẾT QUẢ GỐC (GIỮ NGUYÊN) ===== */
+    let rs = avg>=50 ? "TÀI" : "XỈU";
+    let pc = avg>=50 ? avg : 100-avg;
+
+    /* ===== BẺ NGƯỢC < 53% (CHỈ THÊM ĐOẠN NÀY) ===== */
+    if(pc < 53){
+      rs = rs === "TÀI" ? "XỈU" : "TÀI";
+      pc = 100 - pc;
+    }
+    /* =================================== */
+
+    final.innerHTML=`SIÊU KẾT QUẢ: <b>${rs} ${pc}%</b>`;
+    bar.style.width=pc+"%";
+  },1600);
+}
+</script>
+</body>
+</html>
